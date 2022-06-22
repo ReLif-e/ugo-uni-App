@@ -13,7 +13,6 @@
           <image :src="item.image_src"></image>
         </navigator>
       </swiper-item>
- 
     </swiper>
 	
     <!-- 导航条 -->
@@ -49,15 +48,15 @@
             ></image>
           </navigator>
         </view>
-        </view>
       </view>
+    </view>
   
 
 
 
 	<!-- 回到顶部 -->
-<view class="goTop icon-top" @click="hAdd"></view>
-  </view>
+		<view class="goTop icon-top" @click="hAdd"></view>
+	</view>
 </template>
 
 <script>
@@ -85,19 +84,21 @@
 	},
 	
 	// 监听用户下拉
-	async onPullDownRefresh(){
-	await this.getSwiperList()
-	await this.getCategoryList()
-	await this.getFloorList()
+	 async onPullDownRefresh(){
+		await this.getSwiperList()
+		await this.getCategoryList()
+		await this.getFloorList()
 	
-	// 请求结束后取消下拉动画
-	uni.stopPullDownRefresh()
+		// 请求结束后取消下拉动画
+		uni.stopPullDownRefresh()
 	},
 
     methods: {
+		
       disableScroll(ev) {
         this.pageHeight = ev.pageHeight + "px";
       },
+	  
 	 async getSwiperList(){
 		  const {data:res} = await uni.$http.get('/api/public/v1/home/swiperdata');
 		  // console.log('打开页面',res)
@@ -136,13 +137,14 @@
 		  this.floorItem = res.message
 	    },
 		
-		// 点击返回顶部
+	  // 点击返回顶部
 		hAdd(){
 			uni.pageScrollTo({
 				scrollTop:0
 			})
 		}
     
+	// 
 	},
   };
 </script>

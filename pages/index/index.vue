@@ -8,152 +8,55 @@
       indicator-color="rgba(255, 255, 255, 0.6)"
       indicator-active-color="#fff"
     >
-      <swiper-item>
-        <navigator url="/subpkg/goods/index/index">
-          <image src="http://static.botue.com/ugo/uploads/banner1.png"></image>
+      <swiper-item v-for="item in swiperItem" :key="item.goods_id">
+        <navigator :url="`/subpkg/pages/goods/index?id=${item.goods_id}`">
+          <image :src="item.image_src"></image>
         </navigator>
       </swiper-item>
-      <swiper-item>
-        <navigator url="/subpkg/goods/index/index">
-          <image src="http://static.botue.com/ugo/uploads/banner2.png"></image>
-        </navigator>
-      </swiper-item>
-      <swiper-item>
-        <navigator url="/subpkg/goods/index/index">
-          <image src="http://static.botue.com/ugo/uploads/banner3.png"></image>
-        </navigator>
-      </swiper-item>
+ 
     </swiper>
+	
     <!-- 导航条 -->
     <view class="navs">
-      <navigator open-type="switchTab" url="/pages/category/index">
+      <navigator 
+	   v-for="item in navItem"
+	   :key="item.name"
+	   :open-type="item.open_type || 'navigate'" 
+	   :url="item.open_type? `/pages/category/index` : `/subpkg/pages/list/index?query=${item.name}`"
+	  >
         <image
-          src="http://static.botue.com/ugo/uploads/icon_index_nav_4@2x.png"
-        ></image>
-      </navigator>
-      <navigator url="/subpkg/pages/list/index">
-        <image
-          src="http://static.botue.com/ugo/uploads/icon_index_nav_3@2x.png"
-        ></image>
-      </navigator>
-      <navigator url="/subpkg/pages/list/index">
-        <image
-          src="http://static.botue.com/ugo/uploads/icon_index_nav_2@2x.png"
-        ></image>
-      </navigator>
-      <navigator url="/subpkg/pages/list/index">
-        <image
-          src="http://static.botue.com/ugo/uploads/icon_index_nav_1@2x.png"
+          :src="item.image_src"
         ></image>
       </navigator>
     </view>
-    <!-- 楼层 -->
+    
+	
+	<!-- 楼层 -->
     <view class="floors">
-      <view class="floor">
+      <view class="floor" v-for="item in floorItem" :key="item.floor_title.name">
         <view class="title">
           <image
-            src="http://static.botue.com/ugo/uploads/pic_floor01_title.png"
+            :src="item.floor_title.image_src"
           ></image>
         </view>
         <view class="items">
-          <navigator url="/subpkg/pages/list/index">
+          <navigator 
+		  :url="`/subpkg/pages/list/index?query=${product.name}`"  
+		  v-for="product in item.product_list"
+		  :key="product.name">
             <image
-              src="http://static.botue.com/ugo/uploads/pic_floor01_1@2x.png"
+              :src="product.image_src"
             ></image>
           </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor01_2@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor01_3@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor01_4@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor01_5@2x.png"
-            ></image>
-          </navigator>
+        </view>
         </view>
       </view>
-      <view class="floor">
-        <view class="title">
-          <image
-            src="http://static.botue.com/ugo/uploads/pic_floor02_title.png"
-          />
-        </view>
-        <view class="items">
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor02_1@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor02_2@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor02_3@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor02_4@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor02_5@2x.png"
-            ></image>
-          </navigator>
-        </view>
-      </view>
-      <view class="floor">
-        <view class="title">
-          <image
-            src="http://static.botue.com/ugo/uploads/pic_floor03_title.png"
-          ></image>
-        </view>
-        <view class="items">
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor03_1@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor03_2@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor03_3@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor03_4@2x.png"
-            ></image>
-          </navigator>
-          <navigator url="/subpkg/pages/list/index">
-            <image
-              src="http://static.botue.com/ugo/uploads/pic_floor03_5@2x.png"
-            ></image>
-          </navigator>
-        </view>
-      </view>
-    </view>
-    <!-- 回到顶部 -->
-    <view class="goTop icon-top"></view>
+  
+
+
+
+	<!-- 回到顶部 -->
+<view class="goTop icon-top" @click="hAdd"></view>
   </view>
 </template>
 
@@ -164,6 +67,9 @@
     data() {
       return {
         pageHeight: "auto",
+		swiperItem:[],
+		navItem:[],
+		floorItem:[]
       };
     },
 
@@ -173,20 +79,71 @@
 
 // 打开页面执行
 	onLoad() {
-		this.axios()
+		this.getSwiperList()
+		this.getCategoryList()
+		this.getFloorList()
+	},
+	
+	// 监听用户下拉
+	async onPullDownRefresh(){
+	await this.getSwiperList()
+	await this.getCategoryList()
+	await this.getFloorList()
+	
+	// 请求结束后取消下拉动画
+	uni.stopPullDownRefresh()
 	},
 
     methods: {
       disableScroll(ev) {
         this.pageHeight = ev.pageHeight + "px";
       },
-	 async axios(){
-		  const res = await uni.request({
-		  	url:'/api/public/v1/home/swiperdata',
-		  })
-		  console.log('打开页面',res)
-	  }
-    },
+	 async getSwiperList(){
+		  const {data:res} = await uni.$http.get('/api/public/v1/home/swiperdata');
+		  // console.log('打开页面',res)
+		  if(res.meta.status  !== 200){
+			  return uni.showToast({
+			  	title:'数据加载失败..',
+				icon:"none"
+			  })
+		  }
+		  this.swiperItem = res.message
+	  },
+	  
+	  // 获取分类导航
+	  async getCategoryList(){
+		  const {data:res} = await uni.$http.get('/api/public/v1/home/catitems')
+		  // console.log("分类导航",res)
+		  if(res.meta.status !== 200){
+			  return uni.showToast({
+			  	title:'获取数据失败',
+				icon:"none"
+			  })
+		  }
+		  this.navItem = res.message
+	  },
+	  
+	  // 获取楼层信息
+	  async getFloorList(){
+		  const {data:res} = await uni.$http.get('/api/public/v1/home/floordata')
+		  // console.log('楼层数据',res)
+		  if(res.meta.status !== 200){
+		     return uni.showToast({
+		      title:'获取数据失败',
+		      icon:"none"
+		     })
+		  }
+		  this.floorItem = res.message
+	    },
+		
+		// 点击返回顶部
+		hAdd(){
+			uni.pageScrollTo({
+				scrollTop:0
+			})
+		}
+    
+	},
   };
 </script>
 

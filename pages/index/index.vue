@@ -104,7 +104,7 @@
 		  // console.log('打开页面',res)
 		  if(res.meta.status  !== 200){
 			  return uni.showToast({
-			  	title:'数据加载失败..',
+			  	title:'数据加载失败...',
 				icon:"none"
 			  })
 		  }

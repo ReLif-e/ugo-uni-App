@@ -7,77 +7,67 @@
       <text>价格</text>
     </view>
     <!-- 商品列表 -->
-    <scroll-view class="goods" scroll-y>
-      <view class="item" @click="goDetail">
+    <scroll-view class="goods" scroll-y @scrolltolower="getMore">
+      <view class="item" v-for="item in goodsList" :key="item.goods_id"  @click="goDetail(item.goods_id)">
         <!-- 商品图片 -->
-        <image class="pic" src="http://static.botue.com/ugo/uploads/goods_1.jpg"></image>
+        <image class="pic" :src="item.goods_small_logo"></image>
         <!-- 商品信息 -->
         <view class="meta">
-          <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
+		
+          <view class="name"> {{item.goods_name}}</view>
           <view class="price">
-            <text>￥</text>1399<text>.00</text>
-          </view>
-        </view>
-      </view>
-      <view class="item" @click="goDetail">
-        <!-- 商品图片 -->
-        <image class="pic" src="http://static.botue.com/ugo/uploads/goods_2.jpg"></image>
-        <!-- 商品信息 -->
-        <view class="meta">
-          <view class="name">卡奇莱德汽车车载空气净化器负离子除甲醛PM2.5除烟异味车用氧吧双涡轮出风（红色）</view>
-          <view class="price">
-            <text>￥</text>168<text>.00</text>
-          </view>
-        </view>
-      </view>
-      <view class="item" @click="goDetail">
-        <!-- 商品图片 -->
-        <image class="pic" src="http://static.botue.com/ugo/uploads/goods_3.jpg"></image>
-        <!-- 商品信息 -->
-        <view class="meta">
-          <view class="name">沿途（yantu）车载充电器车充一拖二usb转接口手机智能头多功能汽车点烟器</view>
-          <view class="price">
-            <text>￥</text>168<text>.00</text>
-          </view>
-        </view>
-      </view>
-      <view class="item" @click="goDetail">
-        <!-- 商品图片 -->
-        <image class="pic" src="http://static.botue.com/ugo/uploads/goods_4.jpg"></image>
-        <!-- 商品信息 -->
-        <view class="meta">
-          <view class="name">车载冰箱7.5L 冷暖两用汽车冰箱半导体12V迷你电冰箱升级款</view>
-          <view class="price">
-            <text>￥</text>168<text>.00</text>
-          </view>
-        </view>
-      </view>
-      <view class="item" @click="goDetail">
-        <!-- 商品图片 -->
-        <image class="pic" src="http://static.botue.com/ugo/uploads/goods_5.jpg"></image>
-        <!-- 商品信息 -->
-        <view class="meta">
-          <view class="name">神行者电子狗 神行者L70电子狗测速 测速雷达 流动测速 多种警示路段提醒</view>
-          <view class="price">
-            <text>￥</text>168<text>.00</text>
+            <text>￥</text>{{item.goods_price}}<text>.00</text>
           </view>
         </view>
       </view>
       <!-- 加载更多 -->
-      <view class="getMore">正在加载...</view>
+      <view class="getMore" v-if="goodsList.length === 0">暂无数据...</view>
+      <view class="getMore" v-else>正在加载...</view>
     </scroll-view>
   </view>
 </template>
 
 <script>
+	import {debounce} from 'lodash'
   export default {
-
+   data(){
+	return {
+	    goodsList: [],
+	    query: '',
+		nextPage:1,
+		hash:true
+	  }
+    },
+	 onLoad(params) {
+	    this.query = params.query;
+		this.getGoodsList()
+	  },
     methods: {
-      goDetail() {
+      goDetail(goods_id) {
         uni.navigateTo({
-          url: '/subpkg/pages/goods/index'
+          url: `/subpkg/pages/goods/index?id=` + goods_id
         })
-      }
+      },
+	async getGoodsList(){
+		if(!this.hash) return
+		 const {data:res} = await uni.$http.get('/api/public/v1/goods/search',{
+			 query:this.query,
+			 pagenum:this.nextPage++,
+			 pagesize:5
+		 })
+		 // this.goodsList = res.message.goods
+		 this.goodsList = this.goodsList.concat(res.message.goods) 
+		 // console.log(res)
+		 this.hash  = this.goodsList < res.message.total
+	 } ,
+	 
+	 // 防抖
+	 getMore:debounce(function(){
+	 	// console.log(1)
+		this.getGoodsList()
+	 },500),
+	 
+	 
     }
   }
 </script>

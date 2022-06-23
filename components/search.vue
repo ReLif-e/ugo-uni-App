@@ -3,45 +3,51 @@
   <div class="search" :class="{ focused: focused }">
     <!-- 搜索框 -->
     <div class="input-wrap" @click="goSearch">
-      <input class="input" type="text" :placeholder="placeholder" />
+      <input class="input"    @confirm="addHistory" v-model="query" @input="input" type="text" :placeholder="placeholder" />
       <span class="cancle" @click.stop="cancleSearch">取消</span>
     </div>
     <!-- 搜索结果 -->
     <div class="content">
       <div class="title">
         搜索历史
-        <span class="clear"></span>
+        <span class="clear" @click="remove"></span>
       </div>
       <div class="history">
-        <navigator class="navigator" url="/subpkg/pages/list/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/list/index">智能电视</navigator>
-        <navigator class="navigator" url="/subpkg/pages/list/index">小米空气净化器</navigator>
-        <navigator class="navigator" url="/subpkg/pages/list/index">西门子洗碗机</navigator>
-        <navigator class="navigator" url="/subpkg/pages/list/index">华为手机</navigator>
-        <navigator class="navigator" url="/subpkg/pages/list/index">苹果</navigator>
-        <navigator class="navigator" url="/subpkg/pages/list/index">锤子</navigator>
+        <navigator v-for="item in queryHistory " 
+		:key="item"
+		 class="navigator" 
+		 :url="`/subpkg/pages/list/index?queery=${item}`"
+		 
+		 >{{item }}</navigator>
+       
       </div>
       <!-- 结果 -->
-      <scroll-view scroll-y class="result">
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
-        <navigator class="navigator" url="/subpkg/pages/goods/index">小米</navigator>
+      <scroll-view scroll-y class="result" v-if="searchList.length">
+        <navigator
+		 class="navigator" 
+		 v-for="item in searchList"
+		 :key="item.goods_id"
+		 :url="`/subpkg/pages/goods/index?id={item.goods_id}`"
+		 >
+		 {{item.goods_name}}
+		 </navigator>
+       
       </scroll-view>
     </div>
   </div>
 </template>
 
 <script>
+	// 导入鲁大师防抖函数
+	import {debounce} from 'lodash'
 export default {
   data() {
     return {
       focused: false,
-      placeholder: ''
+      placeholder: '',
+	  query:'',
+	  searchList:[],
+	  queryHistory: uni.getStorageSync('history') || []
     };
   },
   methods: {
@@ -68,9 +74,67 @@ export default {
 
       // 显示tabBar
       uni.showTabBar();
-    }
+    },
+	// 防抖
+	input:debounce(async function(){
+		if(this.query.trim() === '') return
+		const {data:res} = await uni.$http.get('/api/public/v1/goods/search',{
+			query:this.query
+		});
+		
+		// 如果返回值有问题,退出函数
+		if(res.meta.status !== 200){
+			return uni.showToast({
+				title: '获取数据失败',
+				icon:"none"
+			});
+		}
+		console.log(res)
+		
+		// 重新赋值
+	  this.searchList = res.message
+	},1000),
+	
+	addHistory(){
+		if( this.queryHistory.includes(this.query)) return
+ 		   this.queryHistory.push(this.query)
+		   console.log(this.queryHistory)
+		    uni.setStorageSync('history', this.queryHistory);
+			uni.setStorageSync('history', this.queryHistory);
+	},
+	
+	// 删除本地
+	remove(){
+		this.queryHistory = []
+		uni.removeStorageSync('history')
+		console.log('1')
+		
+	}
+   }
   }
-};
+		
+	// 获取用户输入得数据
+ // 	async input(){
+	// 	// console.log(this.query)
+	// 	//发送请求
+	// 	const {data:res} = await uni.$http.get('/api/public/v1/goods/search',{
+	// 		query:this.query
+	// 	})
+		
+	// 	// 如果返回值有问题,退出函数
+	// 	if(res.meta.status !== 200){
+	// 		return uni.showToast({
+	// 			title: '获取数据失败',
+	// 			icon:"none"
+	// 		});
+	// 	}
+	// 	console.log(res)
+		
+	// 	// 重新赋值
+	// 	this.searchList = res.message
+	// }
+//   }
+// };
 </script>
 
 <style lang="scss" scoped>

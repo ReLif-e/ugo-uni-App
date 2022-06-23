@@ -3,7 +3,7 @@ import { $http } from '@escook/request-miniprogram';
 
 
 // 配置根路径
-$http.baseUrl = 'https://api-ugo-web.itheima.net';
+$http.baseUrl = 'https://api-hmugo-web.itheima.net';
 
 
 // 请求拦截器

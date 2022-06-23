@@ -7,16 +7,14 @@
       <!-- 顶级分类 -->
       <view class="sup">
         <scroll-view scroll-y>
-          <text class="active">大家电</text>
-          <text>热门推荐</text>
-          <text>海外购</text>
-          <text>苏宁房产</text>
-          <text>手机相机</text>
-          <text>电脑办公</text>
-          <text>厨卫电器</text>
-          <text>食品酒水</text>
-          <text>居家生活</text>
-          <text>厨房电器</text>
+          <text 
+		  :class="{active: index===CreatedId }" 
+		  v-for="item,index in categoryList" 
+		  :key="item.cat_id"
+		  @click="setActiveIndex(index)"
+		  >
+		  {{item.cat_name}}</text>
+
         </scroll-view>
       </view>
       <!-- 子级分类 -->
@@ -145,13 +143,48 @@
 </template>
 
 <script>
+	// 导入组件
   import search from '@/components/search';
 
   export default {
-
+	  
+	  data(){
+		  return{
+			  categoryList:[],
+			  CreatedId:0
+		  }
+	  },
+	  
+	// 注册组件
     components: {
       search
-    }
+    },
+	
+	// 打开页面触发
+	onLoad() {
+		this.getCategoryList()
+	},
+	
+	// 事件
+	methods:{
+		async getCategoryList(){
+			const {data:res} =  await  uni.$http.get('/api/public/v1/categories');
+			console.log('数据',res)
+			if(res.meta.status !== 200){
+				return uni.showToast({
+					title:'获取数据失败',
+					icon:'none'
+				})
+			}
+			// 获取的数据赋值给变量以便渲染
+			this.categoryList = res.message
+		},
+		
+		// 改变类得位置，通过下标
+		setActiveIndex(index){
+			this.CreatedId = index
+		}
+	}
   }
 </script>
 

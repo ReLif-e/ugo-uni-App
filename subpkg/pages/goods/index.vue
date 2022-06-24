@@ -15,20 +15,22 @@
       <text class="collect icon-star">收藏</text>
     </view>
     <!-- 商品详情 -->
+	   <van-button type="primary">{{ msg }}</van-button>
     <view class="detail">
       <view v-html="getList.goods_introduce"></view>
     </view>
     <!-- 操作 -->
     <view class="action">
       <button open-type="contact" class="icon-handset">联系客服</button>
-      <text class="cart icon-cart" @click="goCart">购物车</text>
-      <text class="add">加入购物车</text>
+      <text class="cart icon-cart" @click="goCart">购物车{{cartCount}}</text>
+      <text class="add" @click="addToCart">加入购物车</text>
       <text class="buy" @click="createOrder">立即购买</text>
     </view>
   </view>
 </template>
 
 <script>
+	import { mapState ,mapGetters} from 'vuex';
   export default {
 	data(){
 		return{
@@ -36,16 +38,23 @@
 			getList:[]
 		}
 	},
+	 computed: {
+	    ...mapState('m_cart', ['carts']),
+	    ...mapGetters('m_cart', ['cartCount'])
+	  },
 	onLoad(params) {
 		this.goods_id = params.id
 		this.getGoodsList()
 	},
+	
+
     methods: {
       goCart() {
         uni.switchTab({
           url: '/pages/cart/index'
         })
       },
+	  
       createOrder() {
         uni.navigateTo({
           url: '/subpkg/pages/order/index'
@@ -57,6 +66,21 @@
 			  goods_id:this.goods_id
 		  })
 		  this.getList = res.message
+	  },
+	  addToCart(){
+		  // console.log('点击了购物车')
+		        const goods = {
+		          goods_id: this.getList.goods_id, // 商品id
+		          goods_name: this.getList.goods_name, // 商品名称
+		          goods_price: this.getList.goods_price, // 商品价格
+		          goods_small_logo: this.getList.goods_small_logo, // 商品图片
+		          goods_count: 1, // 购买数量
+		          goods_state: true // 商品选中状态
+		        };
+				
+		  // 调用store里面得方法
+		  // this.$store.commit('1m_cart/addToCart',{goods_name:'测试'})
+		  this.$store.commit('m_cart/addToCart',goods)
 	  }
     }
   }

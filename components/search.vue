@@ -27,7 +27,8 @@
 		 class="navigator" 
 		 v-for="item in searchList"
 		 :key="item.goods_id"
-		 :url="`/subpkg/pages/goods/index?id={item.goods_id}`"
+		 :url="`/subpkg/pages/goods/index?id=${item.goods_id}`"
+
 		 >
 		 {{item.goods_name}}
 		 </navigator>
@@ -46,7 +47,7 @@ export default {
       focused: false,
       placeholder: '',
 	  query:'',
-	  searchList:[],
+	  searchList:'',
 	  queryHistory: uni.getStorageSync('history') || []
     };
   },
@@ -92,14 +93,14 @@ export default {
 		console.log(res)
 		
 		// 重新赋值
-	  this.searchList = res.message
+	  this.searchList = res.message.goods
 	},1000),
 	
 	addHistory(){
 		if( this.queryHistory.includes(this.query)) return
  		   this.queryHistory.push(this.query)
 		   console.log(this.queryHistory)
-		    uni.setStorageSync('history', this.queryHistory);
+		    // uni.setStorageSync('history', this.queryHistory);
 			uni.setStorageSync('history', this.queryHistory);
 	},
 	

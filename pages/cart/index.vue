@@ -14,68 +14,27 @@
     <view class="carts">
       <view class="item">
         <!-- 店铺名称 -->
-        <view class="shopname">优购生活馆</view>
-        <view class="goods">
+  
+  
+        <view class="goods" v-for="item,index in carts" :key="item.goods_id">
           <!-- 商品图片 -->
-          <image class="pic" src="http://static.botue.com/ugo/uploads/goods_1.jpg"></image>
+          <image class="pic" :src="item.goods_small_logo"></image>
           <!-- 商品信息 -->
           <view class="meta">
-            <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
+            <view class="name">{{item.goods_name}}</view>
             <view class="price">
-              <text>￥</text>1399<text>.00</text>
+              <text>￥</text>{{item.goods_price}}<text>.00</text>
             </view>
             <!-- 加减 -->
             <view class="amount">
-              <text class="reduce">-</text>
-              <input type="number" value="1" class="number">
-              <text class="plus">+</text>
+              <text class="reduce" @click="DelCount(index)">-</text>
+              <input type="number" disabled :value="item.goods_count" class="number">
+              <text class="plus" @click="AddCount(index)">+</text>
             </view>
           </view>
           <!-- 选框 -->
-          <view class="checkbox">
-            <icon type="success" size="20" color="#ea4451"></icon>
-          </view>
-        </view>
-        <view class="goods">
-          <!-- 商品图片 -->
-          <image class="pic" src="http://static.botue.com/ugo/uploads/goods_2.jpg"></image>
-          <!-- 商品信息 -->
-          <view class="meta">
-            <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
-            <view class="price">
-              <text>￥</text>1399<text>.00</text>
-            </view>
-            <!-- 加减 -->
-            <view class="amount">
-              <text class="reduce">-</text>
-              <input type="number" value="1" class="number">
-              <text class="plus">+</text>
-            </view>
-          </view>
-          <!-- 选框 -->
-          <view class="checkbox">
-            <icon type="success" size="20" color="#ea4451"></icon>
-          </view>
-        </view>
-        <view class="goods">
-          <!-- 商品图片 -->
-          <image class="pic" src="http://static.botue.com/ugo/uploads/goods_5.jpg"></image>
-          <!-- 商品信息 -->
-          <view class="meta">
-            <view class="name">【海外购自营】黎珐(ReFa) MTG日本 CARAT铂金微电流瘦脸瘦身提拉紧致V脸美容仪 【保税仓发货】</view>
-            <view class="price">
-              <text>￥</text>1399<text>.00</text>
-            </view>
-            <!-- 加减 -->
-            <view class="amount">
-              <text class="reduce">-</text>
-              <input type="number" value="1" class="number">
-              <text class="plus">+</text>
-            </view>
-          </view>
-          <!-- 选框 -->
-          <view class="checkbox">
-            <icon type="success" size="20" color="#ccc"></icon>
+          <view class="checkbox" @click="toggerState(index)">
+            <icon type="success" size="20" :color="item.goods_state ? '#ea4451' : '#ccc'"></icon>
           </view>
         </view>
       </view>
@@ -83,20 +42,47 @@
     <!-- 其它 -->
     <view class="extra">
       <label class="checkall">
-        <icon type="success" color="#ccc" size="20"></icon>
+        <icon type="success" @click="ToggleAll" :color="allChecked ? '#ea4451' : '#ccc'" size="20"></icon>
         全选
       </label>
       <view class="total">
         合计: <text>￥</text><label>14110</label><text>.00</text>
       </view>
-      <view class="pay">结算(3)</view>
+      <view class="pay">结算({{checkedCount}})</view>
     </view>
   </view>
 </template>
 
 <script>
+  import { mapState,mapGetters } from 'vuex';
   export default {
-    
+    computed:{
+		...mapState('m_cart',['carts']),
+		...mapGetters('m_cart',['allChecked','checkedCount'])
+	},
+	methods:{
+		toggerState(index){
+			// 调用carts里面得方法并把下标传过去
+			this.$store.commit('m_cart/toggerState',index)
+			
+		},
+		
+		ToggleAll(){
+			this.$store.commit('m_cart/ToggleAll',this.allChecked)
+		},
+		
+		// 减法
+		DelCount(index){
+			this.$store.commit('m_cart/DelCount',index)
+	
+		},
+		
+		// 加法
+		AddCount(index){
+			this.$store.commit('m_cart/AddCount',index)
+		
+		}
+	}
   }
 </script>
 

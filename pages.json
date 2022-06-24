@@ -18,7 +18,10 @@
   ],
   "globalStyle": {
     "navigationBarBackgroundColor": "#ea4451",
-    "navigationBarTitleText": "黑马优购"
+    "navigationBarTitleText": "黑马优购",
+	"usingComponents": {
+	  "van-button": "/wxcomponents/@vant/weapp/button/index"
+	}
   },
   "tabBar": {
     "color": "#333",
